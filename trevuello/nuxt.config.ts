@@ -3,4 +3,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt'],
   ssr: false,
+  app: {
+    head: {
+      title: 'TreVUEllo Board',
+    },
+  },
 });
