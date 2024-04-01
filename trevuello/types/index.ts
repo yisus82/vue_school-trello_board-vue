@@ -3,7 +3,6 @@ export type ID = string;
 export interface Task {
   id: ID;
   title: string;
-  createdAt: Date;
 }
 
 export interface Column {
