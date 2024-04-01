@@ -43,10 +43,12 @@ const columns = ref<Column[]>([
 
 <template>
   <div>
-    <draggable class="flex gap-4 overflow-x-auto items-start" v-model="columns" group="columns" item-key="id">
+    <draggable class="flex gap-4 overflow-x-auto items-start" v-model="columns" group="columns" item-key="id"
+      :animation="150" handle=".drag-handle">
       <template #item="{ element: column }: { element: Column; }">
         <div class="bg-gray-200 p-5 rounded min-w-[250px]">
-          <header class="mb-4">
+          <header class="flex gap-2 mb-4">
+            <DragHandle />
             <h2 class="font-bold">{{ column.title }}</h2>
           </header>
           <TrelloBoardTask v-for="task in column.tasks" :key="task.id" :task="task" />
