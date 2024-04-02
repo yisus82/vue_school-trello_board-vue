@@ -13,6 +13,7 @@ const createTask = (e: Event) => {
   const trimmedTitle = title.value.trim();
 
   if (!trimmedTitle) {
+    cancelTask(e);
     return;
   }
 

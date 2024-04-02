@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Column, Task } from '@/types';
+import type { Column } from '@/types';
 import { nanoid } from 'nanoid';
 import draggable from 'vuedraggable';
 
@@ -40,32 +40,30 @@ const columns = ref<Column[]>([
   },
 ]);
 
-const altKeyPressed = useKeyModifier('Alt');
+const focusNewColumnTitle = () => {
+  const title = document.querySelector('.column:last-of-type .title') as HTMLInputElement;
+  title.focus();
+};
+
+const createColumn = () => {
+  const newColumn: Column = {
+    id: nanoid(),
+    title: '',
+    tasks: [],
+  };
+  columns.value.push(newColumn);
+  nextTick(focusNewColumnTitle);
+};
 </script>
 
 <template>
-  <div>
-    <draggable class="flex gap-4 overflow-x-auto items-start" v-model="columns" group="columns" item-key="id"
-      :animation="150" handle=".drag-handle">
+  <div class="flex items-start gap-4 overflow-x-auto">
+    <draggable class="flex gap-4 items-start" v-model="columns" group="columns" item-key="id" :animation="150"
+      handle=".drag-handle">
       <template #item="{ element: column }: { element: Column; }">
-        <div class="bg-gray-200 p-5 rounded min-w-[250px]">
-          <header class="flex gap-2 mb-4">
-            <DragHandle />
-            <h2 class="font-bold">{{ column.title }}</h2>
-          </header>
-          <draggable v-model="column.tasks" :group="{ name: 'tasks', pull: altKeyPressed ? 'clone' : true }"
-            item-key="id" :animation="150" handle=".drag-handle">
-            <template #item="{ element: task }: { element: Task; }">
-              <div>
-                <TrelloBoardTask :task="task" />
-              </div>
-            </template>
-          </draggable>
-          <footer>
-            <NewTask @add="column.tasks.push($event)" />
-          </footer>
-        </div>
+        <TrelloBoardColumn :column="column" @delete="columns = columns.filter((c) => c.id !== $event)" />
       </template>
     </draggable>
+    <button @click="createColumn" class="p-2 bg-gray-200 rounded whitespace-nowrap opacity-50">Add Column</button>
   </div>
 </template>

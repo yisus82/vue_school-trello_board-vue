@@ -8,9 +8,8 @@ const emit = defineEmits<{ (e: 'delete', payload: ID): void; }>();
 const focused = ref(false);
 
 onKeyStroke('Backspace', (e) => {
-  e.preventDefault();
-
   if (focused.value) {
+    e.preventDefault();
     emit('delete', props.task.id);
   }
 });
