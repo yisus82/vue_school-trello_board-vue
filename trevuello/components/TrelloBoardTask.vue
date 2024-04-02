@@ -1,11 +1,24 @@
 <script setup lang="ts">
-import type { Task } from '@/types';
+import type { ID, Task } from '@/types';
 
-defineProps<{ task: Task; }>();
+const props = defineProps<{ task: Task; }>();
+
+const emit = defineEmits<{ (e: 'delete', payload: ID): void; }>();
+
+const focused = ref(false);
+
+onKeyStroke('Backspace', (e) => {
+  e.preventDefault();
+
+  if (focused.value) {
+    emit('delete', props.task.id);
+  }
+});
 </script>
 
 <template>
-  <div class="task flex gap-2 bg-white p-2 mb-2 rounded shadow-sm w-full max-w-[250px]">
+  <div class="task flex gap-2 bg-white p-2 mb-2 rounded shadow-sm w-full max-w-[250px]" @focus="focused = true"
+    @blur="focused = false" tabindex="0">
     <DragHandle />
     <span class="title">{{ task.title }}</span>
   </div>
@@ -27,5 +40,10 @@ defineProps<{ task: Task; }>();
 
 .title {
   overflow-wrap: anywhere;
+}
+
+.task:focus,
+.task:focus-visible {
+  outline: 3px solid gray;
 }
 </style>

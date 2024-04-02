@@ -19,12 +19,23 @@ const createTask = (e: Event) => {
   emit('add', { id: nanoid(), title: trimmedTitle } as Task);
   title.value = '';
 };
+
+const cancelTask = (e: Event) => {
+  e.preventDefault();
+  if (focused.value) {
+    title.value = '';
+    focused.value = false;
+    (e.target as HTMLTextAreaElement).blur();
+  }
+};
+
+onKeyStroke('Escape', cancelTask);
 </script>
 <template>
   <div>
     <textarea v-model="title" @keydown.tab="createTask" @keydown.enter="createTask" @focus="focused = true"
-      @blur="focused = false" :placeholder="focused ? 'Enter a title for the task...' : 'Add a new task...'"
+      @blur="cancelTask" :placeholder="focused ? 'Enter a title for the task...' : 'Add a new task...'"
       style="outline: none !important;" :class="{ 'h-10': !focused, 'h-20': focused }"
-      class="focus:bg-white focus:shadow resize-none rounded w-full border-none p-2"></textarea>
+      class="focus:bg-white focus:shadow resize-none rounded w-full border-none p-2 max-w-[250px]"></textarea>
   </div>
 </template>
